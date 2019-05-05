@@ -154,6 +154,7 @@ module bahtinov2D() {
 								}
             }
 				
+			circle(r=2);
 
         	}//union
         	
@@ -330,17 +331,7 @@ module print_main(part="all"){
 				}//holeDiameter > 0
 			 }//Handle
 
-		}//union
-			//Split parts
-			assign(maxpl= max(outerHeight,maskHeight,handle>0?handle:0))
-			assign(maxh = max(maskHeight, handleHeight, outerHeight, maxpl-handle))
-			{
-				echo("maxh:",maxh," maxpl:",maxpl," handle:",handle);
-				translate([0,0,(handle<0?(maxpl+handle)/2:maxpl/2)]){//(maxh/2)*sign(handle)+(handle<0?maskHeight:0)]){
-					cube([outerDiameter+split*2,cBars*2/3+split*2,maxh+2],true);		
-					cube([cBars*2/3+split*2,outerDiameter+split*2,maxh+2],true);
-				}
-			}		
+		}//union	
 		}//difference
 			 //Make connectors
 			 assign(
@@ -378,37 +369,8 @@ module print_main(part="all"){
 						}
 					}
 			 }
-
-			 //Making outer border lock
-			 cylinderLocks(outerDiameter,outerDiameter-maskHeight*2,cBars,outerHeight > 0 ? outerHeight : maskHeight,layer,split);
-
-			 //Making inner border lock
-			 if(centerHoleDiameter > 0)
-				assign(ht=handle<0?handleHeight:handleHeight-maskHeight)
-				translate([0,0,handle<0?handle:0])
-					assign(h=handle != 0 ? (maskHeight+(handle>0?handleHeight-maskHeight:handleHeight)) : maskHeight)
-			 		cylinderLocks(centerHoleDiameter+gap,centerHoleDiameter,cBars,h,layer,split);
 			
 		}//union
-		if (part != "all"){
-			if (part == "tl"){
-				translate([-(outerDiameter/2+1+split),0,handle < 0 ? handle : 0])
-					cube([outerDiameter/2+1+split,outerDiameter/2+1+split,maskHeight+max(handleHeight, outerHeight, outerHeight-handle)]);
-			}
-			if (part == "tr"){
-				translate([0,0,handle < 0 ? handle : 0])
-					cube([outerDiameter/2+1+split,outerDiameter/2+1+split,maskHeight+max(handleHeight, outerHeight, outerHeight-handle)]);
-			}
-			if (part == "bl"){
-				translate([-(outerDiameter/2+1+split),-(outerDiameter/2+1+split),handle < 0 ? handle : 0])
-					cube([outerDiameter/2+1+split,outerDiameter/2+1+split,maskHeight+max(handleHeight, outerHeight, outerHeight-handle)]);			
-			}
-			if (part == "br"){
-				translate([0,-(outerDiameter/2+1+split),handle < 0 ? handle : 0])
-					cube([outerDiameter/2+1+split,outerDiameter/2+1+split,maskHeight+max(handleHeight, outerHeight, outerHeight-handle)]);
-			}
-			
-		}
 	}//intersection
 
 }//main_print
