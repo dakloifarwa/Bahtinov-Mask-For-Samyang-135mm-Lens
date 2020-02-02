@@ -93,12 +93,22 @@ module mask()
             }
          cylinder(d=outer_dia, h=thickness+0.1, center=true);
       } // grating
+        difference()
+                {
    translate([0,0,-height/2])
    difference()
       {
          cylinder(d=outer_dia, h=height, center=true);
          cylinder(d=inner_dia, h=height+0.1, center=true);
       }
+                        hull()
+                                {
+                                        f_slot_dia = 4.0; // fastening slot diameter
+                                        f_slot_width = 10.0; // fastening slot width
+                                        translate([(outer_dia+inner_dia)/2/2,(f_slot_width - f_slot_dia)/2,-(height-f_slot_dia/2-2)]) rotate([0,90,0]) cylinder(h=(outer_dia-inner_dia)/2+5, d=f_slot_dia, center=true);
+                                        translate([(outer_dia+inner_dia)/2/2,-(f_slot_width - f_slot_dia)/2,-(height-f_slot_dia/2-2)]) rotate([0,90,0]) cylinder(h=(outer_dia-inner_dia)/2+5, d=f_slot_dia, center=true);
+                                }
+                }
 }
  
  
